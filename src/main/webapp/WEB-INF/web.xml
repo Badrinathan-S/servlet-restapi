@@ -3,15 +3,6 @@
 	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	id="WebApp_ID" version="4.0">
-	<servlet>
-		<servlet-name>TodoServlet</servlet-name>
-		<servlet-class>com.admin.usermanagement.web.UserServlet</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>UserManagement Servlet</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
 
 	<display-name>servlet-crud-server</display-name>
 	<welcome-file-list>

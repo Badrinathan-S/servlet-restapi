@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Servlet implementation class UserServlet
  */
-//@WebServlet("/")
+@WebServlet("/")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDao userDao;
@@ -44,8 +44,17 @@ public class UserServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+//		response.setHeader("Access-Control-Allow-Origin", "*");
+//		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+//		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+//		response.setHeader("Access-Control-Max-Age", "86400");
+//	    //Tell the browser what requests we allow.
+//		response.setHeader("Allow", "GET, HEAD, POST, TRACE, OPTIONS");
+//		response.setContentType("application/json");
+//		response.addHeader("Access-Control-Allow-Origin", "*");
 		// TODO Auto-generated method stub
 		doGet(request, response);
+		doOptions(request, response);
 	}
 
 	/**
@@ -55,9 +64,17 @@ public class UserServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getServletPath();
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		response.setHeader("Access-Control-Max-Age", "86400");
+		// Tell the browser what requests we allow.
+		response.setHeader("Allow", "GET, HEAD, POST, TRACE, OPTIONS");
+		response.setContentType("application/json");
 
 		switch (action) {
 		case "/list":
+			System.out.println("list");
 			listUser(request, response);
 			break;
 		case "/insert":
@@ -69,6 +86,8 @@ public class UserServlet extends HttpServlet {
 		case "/update":
 			break;
 		case "/edit":
+			System.out.println("edit");
+			editUser(request, response);
 			break;
 		default:
 			break;
@@ -77,7 +96,8 @@ public class UserServlet extends HttpServlet {
 
 	}
 
-	private void insertUser(HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+	private void insertUser(HttpServletRequest request, HttpServletResponse response)
+			throws JSONException, IOException {
 
 		JSONObject json = new JSONObject(request.getReader().lines().collect(Collectors.joining()));
 		String name = json.getString("name");
@@ -88,7 +108,10 @@ public class UserServlet extends HttpServlet {
 
 	}
 
-	private void deleteUser(HttpServletRequest request, HttpServletResponse response) {
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response)
+			throws JSONException, IOException {
+		JSONObject json = new JSONObject(request.getReader().lines().collect(Collectors.joining()));
+		System.out.println(json.toString());
 		Integer id = Integer.parseInt(request.getParameter("id"));
 		userDao.deleteUser(id);
 	}
@@ -101,7 +124,42 @@ public class UserServlet extends HttpServlet {
 		String country = request.getParameter("country");
 		UserModel newUser = new UserModel(name, email, country);
 		userDao.updateUser(newUser);
-		System.out.println(newUser);
+//		System.out.println(newUser);
+
+	}
+
+	private void editUser(HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+
+//		System.out.println("edit function");
+//		response.setHeader("Access-Control-Allow-Origin", "*");
+////		response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+//		response.setHeader("Access-Control-Allow-Headers",
+//				"Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With,observe");
+//		response.setHeader("Access-Control-Max-Age", "3600");
+//		response.setHeader("Access-Control-Allow-Credentials", "true");
+//		response.setHeader("Access-Control-Expose-Headers", "Authorization");
+//		response.addHeader("Access-Control-Expose-Headers", "responseType");
+//		response.addHeader("Access-Control-Expose-Headers", "observe");
+//		response.addHeader("Accept", "*/*");
+//		System.out.println(request.getPathInfo());
+//		response.setHeader("Access-Control-Allow-Origin", "*");
+//		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+//		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+//		response.setHeader("Access-Control-Max-Age", "86400");
+//		// Tell the browser what requests we allow.
+//		response.setHeader("Allow", "GET, HEAD, POST, TRACE, OPTIONS");
+//		response.setContentType("application/json");
+//		response.addHeader("Access-Control-Allow-Origin", "*");
+		PrintWriter out = response.getWriter();
+		JSONObject json = new JSONObject(request.getReader().lines().collect(Collectors.joining()));
+		System.out.println(json.toString());
+		Integer id = Integer.parseInt(json.getString("id"));
+//		Integer id = Integer.parseInt(request.getParameter("id"));
+		UserModel user = userDao.selectUser(id);
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = mapper.writeValueAsString(user);
+
+		out.write(jsonString);
 
 	}
 
@@ -110,43 +168,28 @@ public class UserServlet extends HttpServlet {
 //		JSONObject json = new JSONObject(request.getReader().lines().collect(Collectors.joining()));
 //
 //		String name = json.getString("name");
-		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
-		
+
 		List<UserModel> listUsers = new ArrayList<>();
-		
+
 		listUsers = userDao.listAllUser();
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonString = mapper.writeValueAsString(listUsers);
-		
+
 		out.write(jsonString);
-		
-//		for (UserModel userModel : listUsers) {
-//			System.out.println(userModel.getName());	
-//			System.out.println(userModel.getCountry());
-//			System.out.println(userModel.getEmail());
-//			System.out.println(userModel.getId());
-//		}
 
-//		System.out.println(name);
+	}
 
-//		StringBuilder sb = new StringBuilder();
-//	    BufferedReader reader = request.getReader();
-//	    try {
-//	        String line;
-//	        while ((line = reader.readLine()) != null) {
-//	            sb.append(line);
-//	        }
-//	    } finally {
-//	        reader.close();
-//	    }
-//	    String jsonObject = sb.toString();
-//	    JSONObject jsonData = new JSONObject(jsonObject);
-//	    
-//	    String name = jsonData.getString("name");
-//	    
-//	    System.out.println(name);
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		response.setHeader("Access-Control-Max-Age", "86400");
+		// Tell the browser what requests we allow.
+		response.setHeader("Allow", "GET, HEAD, POST, TRACE, OPTIONS");
+		response.setContentType("application/json");
 
 	}
 
