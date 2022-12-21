@@ -1,9 +1,7 @@
 package com.admin.usermanagement.web;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +33,6 @@ public class UserServlet extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		userDao = new UserDao();
-		System.out.println("init statrted");
 	}
 
 	/**
@@ -74,7 +71,7 @@ public class UserServlet extends HttpServlet {
 
 		switch (action) {
 		case "/list":
-			System.out.println("list");
+
 			listUser(request, response);
 			break;
 		case "/insert":
@@ -84,9 +81,9 @@ public class UserServlet extends HttpServlet {
 			deleteUser(request, response);
 			break;
 		case "/update":
+			updateUser(request, response);
 			break;
 		case "/edit":
-			System.out.println("edit");
 			editUser(request, response);
 			break;
 		default:
@@ -112,17 +109,19 @@ public class UserServlet extends HttpServlet {
 			throws JSONException, IOException {
 		JSONObject json = new JSONObject(request.getReader().lines().collect(Collectors.joining()));
 		System.out.println(json.toString());
-		Integer id = Integer.parseInt(request.getParameter("id"));
+		Integer id = Integer.parseInt(json.getString("id"));
 		userDao.deleteUser(id);
 	}
 
-	private void updateUser(HttpServletRequest request, HttpServletResponse response) {
+	private void updateUser(HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
 
-		Integer id = Integer.parseInt(request.getParameter("id"));
-		String name = request.getParameter("name");
-		String email = request.getParameter("email");
-		String country = request.getParameter("country");
-		UserModel newUser = new UserModel(name, email, country);
+		JSONObject json = new JSONObject(request.getReader().lines().collect(Collectors.joining()));
+		System.out.println(json.toString());
+		Integer id = Integer.parseInt(json.getString("id"));
+		String name = json.getString("name");
+		String email = json.getString("email");
+		String country = json.getString("country");
+		UserModel newUser = new UserModel(id, name, email, country);
 		userDao.updateUser(newUser);
 //		System.out.println(newUser);
 
@@ -187,10 +186,8 @@ public class UserServlet extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST");
 		response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 		response.setHeader("Access-Control-Max-Age", "86400");
-		// Tell the browser what requests we allow.
 		response.setHeader("Allow", "GET, HEAD, POST, TRACE, OPTIONS");
 		response.setContentType("application/json");
-
 	}
 
 }
