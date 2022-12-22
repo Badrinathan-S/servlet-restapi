@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Servlet implementation class UserServlet
  */
-@WebServlet("/")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDao userDao;
@@ -33,6 +32,7 @@ public class UserServlet extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		userDao = new UserDao();
+		System.out.println("running demo");
 	}
 
 	/**
@@ -50,9 +50,13 @@ public class UserServlet extends HttpServlet {
 //		response.setContentType("application/json");
 //		response.addHeader("Access-Control-Allow-Origin", "*");
 		// TODO Auto-generated method stub
+		String action = request.getServletPath();
+		System.out.println(action);
+		System.out.println("post");
 		doGet(request, response);
 		doOptions(request, response);
 	}
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -71,19 +75,23 @@ public class UserServlet extends HttpServlet {
 
 		switch (action) {
 		case "/list":
-
+			System.out.println("list");
 			listUser(request, response);
 			break;
 		case "/insert":
+			System.out.println("insert");
 			insertUser(request, response);
 			break;
 		case "/delete":
+			System.out.println("delete");
 			deleteUser(request, response);
 			break;
 		case "/update":
+			System.out.println("update");
 			updateUser(request, response);
 			break;
 		case "/edit":
+			System.out.println("edit");
 			editUser(request, response);
 			break;
 		default:
