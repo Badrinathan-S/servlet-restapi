@@ -6,15 +6,11 @@
 
 	<display-name>servlet-crud-server</display-name>
 	<welcome-file-list>
-		<welcome-file>Home.html</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+		<welcome-file>default.htm</welcome-file>
 	</welcome-file-list>
-	
-	<servlet>
-		<servlet-name>UserServlet</servlet-name>
-		<servlet-class>com.admin.usermanagement.web.UserServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>UserServlet</servlet-name>
-		<url-pattern>/demo/*</url-pattern>
-	</servlet-mapping>
 </web-app>
